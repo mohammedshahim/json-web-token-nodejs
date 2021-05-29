@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 //import Routes
 import authRoute from "./routers/auth";
+import postRoute from "./routers/posts";
 
 dotenv.config();
 
@@ -21,5 +22,6 @@ mongoose.connect(
 
 //Route Middleware
 app.use("/api/user", authRoute);
+app.use("/api/posts", postRoute);
 
 app.listen(3000, () => console.log("Server is up and live!"));

@@ -3,6 +3,7 @@ const router = express.Router();
 import User from "../model/User";
 import { registerValidation, loginValidation } from "../validation";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 router.post("/register", async (req, res) => {
   //Lets validate the data befor we add a user
@@ -46,7 +47,12 @@ router.post("/login", async (req, res) => {
   const validPass = await bcrypt.compare(req.body.password, user.password);
   if (!validPass) return res.status(400).send("Invalid Password");
 
-  res.send("All are working well");
+  //Create and assign a token
+  const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET); //we can check the data in token by visit www.jwt.io and paste the token in their.
+  res.setHeader("auth-token", token); //setup header with this token. then if you go any any page with authentication with user then we need to cross check with this header jwt. we created a posts page. this can only view if you are logged in. for that we use middleware for authenticate the token.
+  //we can also add expire time in this token. for more info search doc of jsonwebtoken in npm
+
+  res.send(token);
 
   // try {
   // } catch (error) {}
